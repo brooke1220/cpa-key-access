@@ -1,0 +1,22 @@
+# Merge into CPA config.yaml. API keys stay in the top-level api-keys.
+plugins:
+  enabled: true
+  dir: plugins
+  configs:
+    key-access:
+      enabled: true
+      priority: 100
+      version: 1
+      # What to do with an authenticated key that has no policy: allow | deny
+      unconfigured_key: allow
+      # Optional. A YAML file with the same version/unconfigured_key/policies fields.
+      # It must exist and be valid, otherwise the plugin fails closed.
+      # policy_file: plugins/key-access/policies.yaml
+      policies: []
+      # policies:
+      #   - caller_scope: 64-hex handle, best created from the management page
+      #     name: alice
+      #     allow_models: [gpt-*]
+      #     deny_models: []
+      #     allow_profiles: [claude:*]
+      #     deny_profiles: []
