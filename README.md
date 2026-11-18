@@ -11,7 +11,7 @@ Status: v0.1. Unit tests, a dlopen ABI harness, a page smoke test (DOM stub) and
 - Models are checked before auth against both the requested model name and the resolved model name, so an alias cannot bypass a deny rule.
 - Channels are CPA auth IDs. The scheduler narrows the host's candidates to the allowed ones, keeps the highest priority tier and round-robins inside it. After auth the selected auth ID is checked again and a disallowed one is rejected with 403.
 - A key without channel rules is left to CPA's built-in scheduler. A key without any policy is allowed, or denied when `unconfigured_key: deny`.
-- Fail closed: if no valid policy could be loaded, or the caller identity is missing while policies exist, requests are rejected with 403.
+- Fail closed: if no valid policy could be loaded, or the caller identity is missing while policies exist, requests are rejected with 403. A panic inside the plugin is recovered so it cannot take CPA down: the interceptors reject the request with 403 and the scheduler refuses to pick.
 
 ## Limits
 
@@ -30,6 +30,32 @@ make install CPA_DIR=/path/to/CLIProxyAPI
 ```
 
 Merge `config.example.yaml` into CPA's `config.yaml`, then open Key Access in the management panel and enter the management key.
+
+## Install from the plugin store
+
+This repository is its own plugin store source: `registry.json` at the root lists the plugin, and CPA installs it from the latest GitHub Release of this repository (the repository must stay public).
+
+1. Add the source to CPA's `config.yaml`. The official store stays available.
+
+```yaml
+plugins:
+  enabled: true
+  store-sources:
+    - "https://raw.githubusercontent.com/brooke1220/cpa-key-access/main/registry.json"
+```
+
+2. Reload CPA, open the plugin store in the management panel, install Key Access, then merge the `key-access` block from `config.example.yaml`.
+
+## Release
+
+Push a tag that is `v` plus a dotted numeric version, for example `v0.1.0`:
+
+```sh
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+`.github/workflows/release.yml` builds linux/amd64, linux/arm64, darwin/arm64 and darwin/amd64, then publishes `key-access_<version>_<goos>_<goarch>.zip` and `checksums.txt` to the GitHub Release. CPA reads the latest release, so a new version does not need a `registry.json` change. `registry.json` must be on `main`, because the raw URL above points at that branch. The release workflow and the store install path have not been run yet. Linux builds need Docker on the CI runner, and the macOS amd64 build is cross-compiled and not ABI-checked.
 
 ## Persistence
 

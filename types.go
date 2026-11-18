@@ -18,11 +18,11 @@ const (
 	pluginID            = "key-access"
 )
 
-var pluginVersion = "0.1.0"
+var pluginVersion = "0.1.1"
 
 // pluginRepository is required by the host: a registration with an empty repository is rejected
-// as invalid metadata. Replace the placeholder with the real repository URL before publishing.
-const pluginRepository = "https://github.com/your-name/key-access"
+// as invalid metadata. Keep it equal to the repository in registry.json.
+const pluginRepository = "https://github.com/brooke1220/cpa-key-access"
 
 const (
 	methodPluginRegister         = "plugin.register"

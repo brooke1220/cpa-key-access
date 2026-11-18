@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "plugins": [
+    {
+      "id": "key-access",
+      "name": "Key Access",
+      "description": "Per-API-key allow/deny rules for models and upstream channels, with a management page.",
+      "author": "brooke1220",
+      "repository": "https://github.com/brooke1220/cpa-key-access",
+      "homepage": "https://github.com/brooke1220/cpa-key-access",
+      "license": "MIT",
+      "tags": ["access-control", "api-key"],
+      "locales": {
+        "zh-CN": {
+          "description": "为每个 API Key 配置模型和上游渠道的 allow/deny 规则，并提供管理页面。"
+        }
+      }
+    }
+  ]
+}

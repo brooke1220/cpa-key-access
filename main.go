@@ -67,13 +67,10 @@ func cliproxyPluginCall(method *C.char, request *C.uint8_t, requestLen C.size_t,
 	if request != nil && requestLen > 0 {
 		requestBytes = C.GoBytes(unsafe.Pointer(request), C.int(requestLen))
 	}
-	raw, err := handleMethod(C.GoString(method), requestBytes)
-	if err != nil {
-		writeResponse(response, errorEnvelope("plugin_error", err.Error(), 0))
-		return 1
-	}
+	// safeHandle recovers panics: one escaping this exported function would terminate CPA itself.
+	raw, rc := safeHandle(handleMethod, C.GoString(method), requestBytes)
 	writeResponse(response, raw)
-	return 0
+	return C.int(rc)
 }
 
 //export cliproxyPluginFree
